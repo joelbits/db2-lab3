@@ -1,3 +1,5 @@
+-- Author: Joel Åkerblom joak.dev@gmail.com
+
 USE `MYSQL_DATABASE`;
 
 -- Lab 3 - 1 - a - Skriv en query som visar vilken veckodag det kommer vara på den sista dagen nuvarande månad.
@@ -10,13 +12,13 @@ SELECT DAYNAME(LAST_DAY(NOW())+INTERVAL 1 day);
 SELECT DATEDIFF(NOW(), '2000-01-01');
 
 -- Lab 3 - 3 - Skriv en query som visar hur många minuter det är kvar till midnatt.
-SELECT timestampdiff(SECOND, timestamp(CURDATE()), timestamp(NOW()));
+SELECT TIMESTAMPDIFF(SECOND, TIMESTAMP(CURDATE()), TIMESTAMP(NOW()));
 
 -- Lab 3 - 4 - Skriv en query som visar alla users som är födda i februari. (users.sql)
 SELECT * FROM `users` WHERE MONTH(`birthdate`) = 2;
 
 -- Lab 3 - 5 - Skriv en query som visar alla users som har födelsedag idag (om någon).
-SELECT * FROM `users` WHERE DATEDIFF(YEAR, DATE(NOW()), DATE(`birthdate`)) > 18
+SELECT * FROM `users` WHERE DATEDIFF(YEAR, DATE(NOW()), DATE(`birthdate`)) > 18;
 
 -- Lab 3 - 6 - För users skriv en procedure, young_users(), som som visar förnamn, efternamn och på alla users som är under 18 år (när queryn körs).
 DROP PROCEDURE IF EXISTS young_users;
@@ -29,6 +31,9 @@ WHERE (SELECT TIMESTAMPDIFF(YEAR, DATE(u.birthdate), DATE(NOW()))) < 18;
 END //
 DELIMITER ;
 
+-- Lab 3 - 6 - young_users - Usage: Returns a list of young users : 
+-- call young_users();
+
 -- Lab 3 - 7 - För users gör en funktion, age(birthdate), som räknar ut ålder utifrån ett födelsedatum. Ska kunna användas med t ex SELECT fname, lname, birthdate, age(birthdate) FROM users ORDER BY birthdate;
 DROP FUNCTION IF EXISTS age;
 DELIMITER //
@@ -39,7 +44,10 @@ RETURN TIMESTAMPDIFF(YEAR, birthdate, DATE(NOW()));
 END //
 DELIMITER ;
 
--- Lab 3 - 7 - Användning: SELECT fname, lname, birthdate, age(birthdate) FROM users ORDER BY birthdate;
+-- Lab 3 - 7 - age : Usage: Returns user age in years.
+-- SELECT fname, lname, birthdate, age(birthdate)
+-- FROM users
+-- ORDER BY birthdate;
 
 -- Lab 3 - 8 - För orders skriv en query som visar order-id för alla orders som är skickade men inte mottagna av kund.
 SELECT id FROM `orders` WHERE `sent` IS NOT NULL AND `arrived_at_customer` IS NULL;
