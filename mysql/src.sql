@@ -15,3 +15,6 @@ SELECT timestampdiff(SECOND, timestamp(CURDATE()), timestamp(NOW()));
 -- Lab 3 - 4 - Skriv en query som visar alla users som är födda i februari. (users.sql)
 SELECT * FROM `users` WHERE MONTH(`birthdate`) = 2;
 
+-- Lab 3 - 5 - Skriv en query som visar alla users som har födelsedag idag (om någon).
+SELECT * FROM `users` WHERE DATE(NOW()) = DATE(`birthdate`)
+
