@@ -1,0 +1,8 @@
+
+
+Usage:
+
+echo "USE lab3; SELECT fname, lname FROM users;" > unames.sql
+
+Run a SQL query:
+mysql -ulab3 -plab3 lab3 < unames.sql
