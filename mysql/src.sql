@@ -28,3 +28,16 @@ FROM users u
 WHERE (SELECT TIMESTAMPDIFF(YEAR, DATE(u.birthdate), DATE(NOW()))) < 18;
 END //
 DELIMITER ;
+
+-- Lab 3 - 7 - För users gör en funktion, age(birthdate), som räknar ut ålder utifrån ett födelsedatum. Ska kunna användas med t ex SELECT fname, lname, birthdate, age(birthdate) FROM users ORDER BY birthdate;
+DROP FUNCTION IF EXISTS age;
+DELIMITER //
+CREATE FUNCTION age(birthdate DATE)
+RETURNS int
+BEGIN
+RETURN TIMESTAMPDIFF(YEAR, birthdate, DATE(NOW()));
+END //
+DELIMITER ;
+
+-- Lab 3 - 7 - Användning: SELECT fname, lname, birthdate, age(birthdate) FROM users ORDER BY birthdate;
+
