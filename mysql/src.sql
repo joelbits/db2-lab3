@@ -41,3 +41,5 @@ DELIMITER ;
 
 -- Lab 3 - 7 - Användning: SELECT fname, lname, birthdate, age(birthdate) FROM users ORDER BY birthdate;
 
+-- Lab 3 - 8 - För orders skriv en query som visar order-id för alla orders som är skickade men inte mottagna av kund.
+SELECT id FROM `orders` WHERE `sent` IS NOT NULL AND `arrived_at_customer` IS NULL;
