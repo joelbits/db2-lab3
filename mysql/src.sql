@@ -54,3 +54,37 @@ SELECT id FROM `orders` WHERE `sent` IS NOT NULL AND `arrived_at_customer` IS NU
 
 -- Lab 3 - 9 - För orders skriv en query som visar order-id för alla orders som är mottagna och skickade inom 48 h.
 SELECT id FROM `orders` WHERE (TIMESTAMPDIFF(HOUR, TIMESTAMP(`received`), TIMESTAMP(`sent`)) < 48);
+
+-- Lab 3 - 10 - (VG) För users skriv triggers så att det inte går att lägga in, eller ändra till födelsedatum som ligger framåt i tiden.
+DROP TRIGGER IF EXISTS birthdate_check_insert;
+DELIMITER //
+CREATE TRIGGER birthdate_check_insert
+BEFORE INSERT ON users FOR EACH ROW
+BEGIN
+    CALL validate_birthdate(NEW.birthdate);
+END //
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS birthdate_check_update;
+DELIMITER //
+CREATE TRIGGER birthdate_check_update
+BEFORE UPDATE ON users FOR EACH ROW
+BEGIN
+    CALL validate_birthdate(NEW.birthdate);
+END //
+DELIMITER ;
+
+-- Used by Lab 3 - 10 - Trigger birthday_check_insert
+DROP PROCEDURE IF EXISTS validate_birthdate;
+DELIMITER //
+CREATE PROCEDURE validate_birthdate(IN birthdate VARCHAR(20))
+BEGIN
+    IF ( DATE(NOW()) < DATE(birthdate) ) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Birthdate is in the future!';
+    END IF;
+END //
+DELIMITER ;
+
+-- Lab 3 - 10 - Usage : Will abort query because birthdate is in the future
+-- UPDATE `users` SET `birthdate`='2018-12-24' WHERE `id` = 1
+-- INSERT INTO `users`(`fname`, `lname`, `birthdate`) VALUES ('NEW', 'USER' , '2018-12-24');
