@@ -96,3 +96,36 @@ FROM orders o
 WHERE ( (o.arrived_at_customer IS NOT NULL) AND (o.sent IS NOT NULL) )
 ORDER BY delivery_time
 LIMIT 5;
+
+-- Lab 3 - 12 (VG) För orders skapa en procedure, order_status(), som visar order-id, och en kolumn för "Status" där det står:
+-- "Processing" för de orders som är mottagna men inte är skickade
+-- "Sent" för de som är skickade men ej är mottagna där det inte gått mer än 14 dagar
+-- "Lost?" för de som är skickade men ej mottagna och där det gått mer än 14 dagar
+-- "Fast" för de som kommit fram till kund inom 72 h
+-- "Slow" för de som kommit fram med mer än 72 frakttid.
+DROP PROCEDURE IF EXISTS order_status;
+DELIMITER //
+CREATE PROCEDURE order_status()
+BEGIN
+    SELECT *, 
+        (CASE
+            WHEN ((o.received IS NOT NULL) AND (o.arrived_at_customer IS NULL)) THEN "Processing"
+            WHEN ( (o.sent IS NOT NULL) AND (o.arrived_at_customer IS NULL) AND 
+                ( (SELECT TIMESTAMPDIFF(DAY, TIMESTAMP(o.sent), TIMESTAMP(o.arrived_at_customer))) < 14 )
+            ) THEN "Sent"
+            WHEN ( (o.sent IS NOT NULL) AND (o.arrived_at_customer IS NULL) AND 
+                ( (SELECT TIMESTAMPDIFF(DAY, TIMESTAMP(o.sent), TIMESTAMP(o.arrived_at_customer))) > 14 )
+            ) THEN "Lost?"
+            WHEN ( (o.sent IS NOT NULL) AND (o.arrived_at_customer IS NOT NULL) AND 
+                ( (SELECT TIMESTAMPDIFF(HOUR, TIMESTAMP(o.sent), TIMESTAMP(o.arrived_at_customer))) < 72 )
+            ) THEN "Fast"
+            WHEN ( (o.sent IS NOT NULL) AND (o.arrived_at_customer IS NOT NULL) AND 
+                ( (SELECT TIMESTAMPDIFF(HOUR, TIMESTAMP(o.sent), TIMESTAMP(o.arrived_at_customer))) > 72 )
+            ) THEN "Slow"
+            ELSE "OTHER"
+        END) AS Status
+    FROM orders o;
+END //
+DELIMITER ;
+
+-- Lab 3 - 12 - Usage: call order_status();
