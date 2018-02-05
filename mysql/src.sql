@@ -1,6 +1,6 @@
 -- Author: Joel Åkerblom joak.dev@gmail.com
 
-USE `MYSQL_DATABASE`;
+USE lab3;
 
 -- Lab 3 - 1 - a - Skriv en query som visar vilken veckodag det kommer vara på den sista dagen nuvarande månad.
 SELECT DAYNAME(LAST_DAY(NOW()));
