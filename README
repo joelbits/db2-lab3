@@ -1,8 +1,15 @@
 
 
+Databases 2 - Uppsala University VT2018
+SQL Date Time exercises
+
 Usage:
+docker-compose up -d --build
+Then browse to http://localhost:8181 for phpMyAdmin.
+lab3:lab3 as login. 
+Click lab3 DB in left menu, then SQL tab and insert queries from mysql/src.sql .
 
-echo "USE lab3; SELECT fname, lname FROM users;" > unames.sql
-
-Run a SQL query:
-mysql -ulab3 -plab3 lab3 < unames.sql
+Or from command line:
+docker exec -it lab3_mysql_1 bash
+then:
+mysql -ulab3 -plab3 lab3 < mysql/src.sql
