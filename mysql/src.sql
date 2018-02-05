@@ -88,3 +88,11 @@ DELIMITER ;
 -- Lab 3 - 10 - Usage : Will abort query because birthdate is in the future
 -- UPDATE `users` SET `birthdate`='2018-12-24' WHERE `id` = 1
 -- INSERT INTO `users`(`fname`, `lname`, `birthdate`) VALUES ('NEW', 'USER' , '2018-12-24');
+
+-- Lab 3 - 11 - (VG)  För orders skriv en query som visar de 5 orders som det var kortast tid mellan att de skickades tills att de kom fram till kund.
+SELECT *, 
+    (SELECT TIMESTAMPDIFF(HOUR, TIMESTAMP(`sent`), TIMESTAMP(`arrived_at_customer`))) AS delivery_time
+FROM orders o
+WHERE ( (o.arrived_at_customer IS NOT NULL) AND (o.sent IS NOT NULL) )
+ORDER BY delivery_time
+LIMIT 5;
