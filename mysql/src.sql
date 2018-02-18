@@ -18,7 +18,9 @@ SELECT TIMESTAMPDIFF(SECOND, TIMESTAMP(CURDATE()), TIMESTAMP(NOW()));
 SELECT * FROM `users` WHERE MONTH(`birthdate`) = 2;
 
 -- Lab 3 - 5 - Skriv en query som visar alla users som har födelsedag idag (om någon).
-SELECT * FROM `users` WHERE DATEDIFF(YEAR, DATE(NOW()), DATE(`birthdate`)) > 18;
+SELECT * FROM `users` 
+WHERE MONTH(birthdate) = MONTH(NOW())
+    AND DAYOFMONTH(birthdate) = DAYOFMONTH(NOW());
 
 -- Lab 3 - 6 - För users skriv en procedure, young_users(), som som visar förnamn, efternamn och på alla users som är under 18 år (när queryn körs).
 DROP PROCEDURE IF EXISTS young_users;
